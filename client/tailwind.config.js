@@ -3,15 +3,26 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      fontFamily: {
+    outfit: ['Outfit', 'sans-serif'],
+    pacifico: ['Pacifico', 'cursive'],
+    tagesschrift: ['Tagesschrift', 'sans-serif'],
+    raleway: ['Raleway', 'sans-serif'],
+  },
+      keyframes: {
+        bgShift: {
+          '0%, 100%': { backgroundPosition: '0% 50%' },
+          '50%': { backgroundPosition: '100% 50%' },
+        },
+      },
+      animation: {
+        bgShift: 'bgShift 10s ease infinite',
+      },
       gridTemplateColumns: {
         auto: "repeat(auto-fit, minmax(200px, 1fr))",
       },
       spacing: {
         "section-height": "500px",
-      },
-      fontFamily: {
-        pacifico: ["Pacifico", "cursive"],
-        raleway: ["Raleway", "sans-serif"],
       },
       fontSize: {
         default: ["15px", "21px"],

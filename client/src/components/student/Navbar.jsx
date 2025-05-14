@@ -1,14 +1,16 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { assets } from '../../assets/assets';
 import { Link, useLocation } from 'react-router-dom';
 import { AppContext } from '../../context/AppContext';
 import { useClerk, UserButton, useUser } from '@clerk/clerk-react';
 import { toast } from 'react-toastify';
 import axios from 'axios';
+import { FaHome, FaInfoCircle } from 'react-icons/fa';
 
 const Navbar = () => {
   const location = useLocation();
   const isCoursesListPage = location.pathname.includes('/course-list');
+  const [isScrolled, setIsScrolled] = useState(false);
 
   const { backendUrl, isEducator, setIsEducator, navigate, getToken } = useContext(AppContext);
   const { openSignIn } = useClerk();
@@ -37,11 +39,29 @@ const Navbar = () => {
     }
   };
 
+  // Scroll listener to toggle background color
+  React.useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 0) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <div
-      className={`flex items-center justify-between px-4 sm:px-10 md:px-14 lg:px-36 py-3 border-b 
-        ${isCoursesListPage ? 'bg-gray-200 border-gray-300' : 'bg-gray-500 border-gray-800'}
-      `}
+      className={`flex items-center justify-between px-4 sm:px-10 md:px-14 lg:px-36 py-3 border-b shadow-sm
+        ${isCoursesListPage
+          ? 'bg-gradient-to-r from-blue-100 to-blue-400 border-blue-300' // Light blue gradient for courses list
+          : isScrolled
+          ? 'bg-blue-200 border-blue-500' // Solid blue if scrolled
+          : 'bg-gradient-to-r from-blue-100 to-blue-400 border-blue-300'} // Light blue gradient if not scrolled
+    `}
     >
       <img
         onClick={() => navigate('/')}
@@ -56,14 +76,14 @@ const Navbar = () => {
           <>
             <button
               onClick={becomeEducator}
-              className="text-gray-100 hover:text-white hover:bg-gray-700 px-3 py-1 rounded-md transition"
+              className="text-blue-900 hover:text-blue-700 hover:bg-blue-200 px-3 py-1 rounded-md transition"
             >
               {isEducator ? 'Educator Dashboard' : 'Become Educator'}
             </button>
-            <span className="text-gray-400">|</span>
+            <span className="text-blue-400">|</span>
             <Link
               to="/my-enrollments"
-              className="text-gray-100 hover:text-white hover:bg-gray-700 px-3 py-1 rounded-md transition"
+              className="text-blue-900 hover:text-blue-700 hover:bg-blue-200 px-3 py-1 rounded-md transition"
             >
               My Enrollments
             </Link>
@@ -74,7 +94,7 @@ const Navbar = () => {
         ) : (
           <button
             onClick={() => openSignIn()}
-            className="bg-gray-900 hover:bg-gray-700 text-white px-4 py-1.5 rounded-full transition"
+            className="bg-blue-900 hover:bg-blue-700 text-white px-4 py-1.5 rounded-full transition"
           >
             Create Account
           </button>
@@ -87,14 +107,14 @@ const Navbar = () => {
           <div className="flex gap-2 items-center">
             <button
               onClick={becomeEducator}
-              className="text-gray-500 hover:text-white hover:bg-gray-700 px-3 py-1 rounded-md transition"
+              className="text-blue-900 hover:text-blue-700 hover:bg-blue-200 px-3 py-1 rounded-md transition"
             >
               {isEducator ? 'Dashboard' : 'Educator'}
             </button>
-            <span className="text-gray-400">|</span>
+            <span className="text-blue-400">|</span>
             <Link
               to="/my-enrollments"
-              className="text-gray-100 hover:text-white hover:bg-gray-700 px-3 py-1 rounded-md transition"
+              className="text-blue-900 hover:text-blue-700 hover:bg-blue-200 px-3 py-1 rounded-md transition"
             >
               Enrollments
             </Link>
@@ -104,7 +124,7 @@ const Navbar = () => {
           <UserButton />
         ) : (
           <button onClick={() => openSignIn()}>
-            <img src={assets.user_icon} alt="User Icon" className="w-6 hover:bg-gray-700 rounded-full transition" />
+            <img src={assets.user_icon} alt="User Icon" className="w-6 hover:bg-blue-200 rounded-full transition" />
           </button>
         )}
       </div>

@@ -1,5 +1,5 @@
-import React, { useContext } from "react";
-import { Routes, Route, useLocation, useMatch, Router } from "react-router-dom";
+import React from "react";
+import { Routes, Route, useLocation, useMatch } from "react-router-dom";
 import Navbar from "./components/student/Navbar";
 import Home from "./pages/student/Home";
 import CourseDetails from "./pages/student/CourseDetails";
@@ -16,18 +16,25 @@ import Player from "./pages/student/Player";
 import MyEnrollments from "./pages/student/MyEnrollments";
 import Loading from "./components/student/Loading";
 import ContactUs from "./pages/student/ContactUs";
+import About from "./pages/student/About";
 
 const App = () => {
+  const location = useLocation();
   const isEducatorRoute = useMatch("/educator/*");
+  const hiddenNavbarRoutes = ["/about", "/contact"];
+  const shouldHideNavbar =
+    isEducatorRoute || hiddenNavbarRoutes.includes(location.pathname.toLowerCase());
 
   return (
     <div className="text-default min-h-screen bg-white">
       <ToastContainer />
-      {/* Render Student Navbar only if not on educator routes */}
-      {!isEducatorRoute && <Navbar />}
+      
+      {/* Show Navbar only if not in hidden routes */}
+      {!shouldHideNavbar && <Navbar />}
+
       <Routes>
         <Route path="/" element={<Home />} />
-        {/* <Route path="/about" element={<About />} /> */}
+        <Route path="/about" element={<About />} />
         <Route path="/contact" element={<ContactUs />} />
         {/* <Route path="/policy" element={<Policy />} /> */}
         <Route path="/course/:id" element={<CourseDetails />} />
@@ -36,6 +43,7 @@ const App = () => {
         <Route path="/my-enrollments" element={<MyEnrollments />} />
         <Route path="/player/:courseId" element={<Player />} />
         <Route path="/loading/:path" element={<Loading />} />
+
         <Route path="/educator" element={<Educator />}>
           <Route path="/educator" element={<Dashboard />} />
           <Route path="add-course" element={<AddCourse />} />
